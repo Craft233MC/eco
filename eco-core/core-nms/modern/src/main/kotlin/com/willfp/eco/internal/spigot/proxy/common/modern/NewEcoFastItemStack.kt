@@ -14,8 +14,6 @@ import com.willfp.eco.util.StringUtils
 import com.willfp.eco.util.toComponent
 import com.willfp.eco.util.toLegacy
 import net.kyori.adventure.text.Component
-import net.kyori.adventure.text.format.Style
-import net.kyori.adventure.text.format.TextColor
 import net.kyori.adventure.text.format.TextDecoration
 import net.minecraft.core.component.DataComponentType
 import net.minecraft.core.component.DataComponents
@@ -23,19 +21,15 @@ import net.minecraft.core.registries.Registries
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.util.Unit
 import net.minecraft.world.item.component.CustomData
-import net.minecraft.world.item.component.CustomModelData
 import net.minecraft.world.item.component.ItemLore
 import net.minecraft.world.item.enchantment.ItemEnchantments
-import org.bukkit.Bukkit
 import org.bukkit.craftbukkit.CraftRegistry
-import org.bukkit.craftbukkit.CraftServer
 import org.bukkit.craftbukkit.enchantments.CraftEnchantment
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.inventory.ItemFlag
 import org.bukkit.inventory.ItemStack
 import org.bukkit.persistence.PersistentDataContainer
 import kotlin.math.max
-import kotlin.math.min
 
 private val unstyledComponent = Component.empty().style {
     it.color(null).decoration(TextDecoration.ITALIC, false)
@@ -47,7 +41,6 @@ private fun Component.unstyled(): Component {
 
 open class NewEcoFastItemStack(
     private val bukkit: ItemStack,
-    private val registryAccessor: RegistryAccessor
 ) : ImplementedFIS {
     // Cast is there because, try as I might, I can't get IntellIJ to recognise half the classes in the dev bundle
     @Suppress("USELESS_CAST")
@@ -83,20 +76,17 @@ open class NewEcoFastItemStack(
         enchantment: Enchantment,
         checkStored: Boolean
     ): Int {
-        val minecraft =
-            CraftRegistry.bukkitToMinecraft<Enchantment, net.minecraft.world.item.enchantment.Enchantment>(
-                enchantment
-            )
-
-        val registry = registryAccessor.getRegistry(Registries.ENCHANTMENT)
-        val holder = registry.wrapAsHolder(minecraft)
+        val minecraft = CraftRegistry.bukkitToMinecraftHolder(
+            enchantment,
+            Registries.ENCHANTMENT
+        )
 
         val enchantments = handle.get(DataComponents.ENCHANTMENTS) ?: return 0
-        var level = enchantments.getLevel(holder)
+        var level = enchantments.getLevel(minecraft)
 
         if (checkStored) {
             val storedEnchantments = handle.get(DataComponents.STORED_ENCHANTMENTS) ?: return 0
-            level = max(level, storedEnchantments.getLevel(holder))
+            level = max(level, storedEnchantments.getLevel(minecraft))
         }
 
         return level
