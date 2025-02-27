@@ -1,6 +1,7 @@
 package com.willfp.eco.core.web;
 
 import com.willfp.eco.core.Eco;
+import com.willfp.eco.core.EcoPlugin;
 import org.jetbrains.annotations.NotNull;
 
 import javax.net.ssl.HttpsURLConnection;
@@ -59,7 +60,7 @@ public class Paste {
      * @param callback The consumer to accept the response token.
      */
     public void getHastebinToken(@NotNull final Consumer<String> callback) {
-        Eco.get().getEcoPlugin().getScheduler().runAsync(() -> {
+        EcoPlugin.getFoliaLib().getScheduler().runAsync(wrappedTask -> {
             try {
                 byte[] postData = URLEncoder.encode(contents, StandardCharsets.UTF_8).getBytes(StandardCharsets.UTF_8);
                 int postDataLength = postData.length;

@@ -1,5 +1,6 @@
 package com.willfp.eco.internal.spigot.recipes
 
+import com.tcoded.folialib.FoliaLib
 import com.willfp.eco.core.EcoPlugin
 import com.willfp.eco.core.items.TestableItem
 import com.willfp.eco.core.items.isEcoEmpty
@@ -135,7 +136,7 @@ class StackedRecipeListener(
 
     private fun runTwice(block: () -> Unit) {
         block()
-        plugin.scheduler.run(block)
+        FoliaLib(plugin).scheduler.runNextTick { block }
     }
 
     companion object {

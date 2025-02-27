@@ -1,5 +1,6 @@
 package com.willfp.eco.internal.spigot.integrations.bstats
 
+import com.tcoded.folialib.FoliaLib
 import com.willfp.eco.core.EcoPlugin
 import org.bukkit.Bukkit
 import org.bukkit.configuration.file.YamlConfiguration
@@ -253,7 +254,7 @@ class Metrics(private val plugin: EcoPlugin) {
             plugin.bStatsId,
             { builder: JsonObjectBuilder -> appendPlatformData(builder) },
             { builder: JsonObjectBuilder -> appendServiceData(builder) },
-            { submitDataTask: Runnable? -> Bukkit.getScheduler().runTask(plugin, submitDataTask!!) },
+            { submitDataTask: Runnable? -> FoliaLib(plugin).getScheduler().runNextTick { submitDataTask!! } },
             { plugin.isEnabled },
             { message: String? -> this.plugin.logger.log(Level.INFO, message) },
             logSentData,

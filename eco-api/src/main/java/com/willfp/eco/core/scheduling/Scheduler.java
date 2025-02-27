@@ -1,7 +1,7 @@
 package com.willfp.eco.core.scheduling;
 
+import com.tcoded.folialib.wrapper.task.WrappedTask;
 import com.willfp.eco.core.EcoPlugin;
-import org.bukkit.scheduler.BukkitTask;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -13,9 +13,9 @@ public interface Scheduler {
      *
      * @param runnable   The lambda to run.
      * @param ticksLater The amount of ticks to wait before execution.
-     * @return The created {@link BukkitTask}.
+     * @return The created {@link WrappedTask}.
      */
-    BukkitTask runLater(@NotNull Runnable runnable,
+    WrappedTask runLater(@NotNull Runnable runnable,
                         long ticksLater);
 
     /**
@@ -25,9 +25,9 @@ public interface Scheduler {
      *
      * @param runnable   The lambda to run.
      * @param ticksLater The amount of ticks to wait before execution.
-     * @return The created {@link BukkitTask}.
+     * @return The created {@link WrappedTask}.
      */
-    default BukkitTask runLater(long ticksLater,
+    default WrappedTask runLater(long ticksLater,
                                 @NotNull Runnable runnable) {
         return runLater(runnable, ticksLater);
     }
@@ -38,9 +38,9 @@ public interface Scheduler {
      * @param runnable The lambda to run.
      * @param delay    The amount of ticks to wait before the first execution.
      * @param repeat   The amount of ticks to wait between executions.
-     * @return The created {@link BukkitTask}.
+     * @return The created {@link WrappedTask}.
      */
-    BukkitTask runTimer(@NotNull Runnable runnable,
+    WrappedTask runTimer(@NotNull Runnable runnable,
                         long delay,
                         long repeat);
 
@@ -52,9 +52,9 @@ public interface Scheduler {
      * @param runnable The lambda to run.
      * @param delay    The amount of ticks to wait before the first execution.
      * @param repeat   The amount of ticks to wait between executions.
-     * @return The created {@link BukkitTask}.
+     * @return The created {@link WrappedTask}.
      */
-    default BukkitTask runTimer(long delay,
+    default WrappedTask runTimer(long delay,
                                 long repeat,
                                 @NotNull Runnable runnable) {
         return runTimer(runnable, delay, repeat);
@@ -66,9 +66,9 @@ public interface Scheduler {
      * @param runnable The lambda to run.
      * @param delay    The amount of ticks to wait before the first execution.
      * @param repeat   The amount of ticks to wait between executions.
-     * @return The created {@link BukkitTask}.
+     * @return The created {@link WrappedTask}.
      */
-    BukkitTask runAsyncTimer(@NotNull Runnable runnable,
+    WrappedTask runAsyncTimer(@NotNull Runnable runnable,
                              long delay,
                              long repeat);
 
@@ -80,9 +80,9 @@ public interface Scheduler {
      * @param runnable The lambda to run.
      * @param delay    The amount of ticks to wait before the first execution.
      * @param repeat   The amount of ticks to wait between executions.
-     * @return The created {@link BukkitTask}.
+     * @return The created {@link WrappedTask}.
      */
-    default BukkitTask runAsyncTimer(long delay,
+    default WrappedTask runAsyncTimer(long delay,
                                      long repeat,
                                      @NotNull Runnable runnable) {
         return runAsyncTimer(runnable, delay, repeat);
@@ -92,17 +92,17 @@ public interface Scheduler {
      * Run the task.
      *
      * @param runnable The lambda to run.
-     * @return The created {@link BukkitTask}.
+     * @return The created {@link WrappedTask}.
      */
-    BukkitTask run(@NotNull Runnable runnable);
+    WrappedTask run(@NotNull Runnable runnable);
 
     /**
      * Run the task asynchronously.
      *
      * @param runnable The lambda to run.
-     * @return The created {@link BukkitTask}.
+     * @return The created {@link WrappedTask}.
      */
-    BukkitTask runAsync(@NotNull Runnable runnable);
+    WrappedTask runAsync(@NotNull Runnable runnable);
 
     /**
      * Schedule the task to be ran repeatedly on a timer.
@@ -112,7 +112,7 @@ public interface Scheduler {
      * @param repeat   The amount of ticks to wait between executions.
      * @return The id of the task.
      */
-    int syncRepeating(@NotNull Runnable runnable,
+    WrappedTask syncRepeating(@NotNull Runnable runnable,
                       long delay,
                       long repeat);
 
@@ -126,7 +126,7 @@ public interface Scheduler {
      * @param repeat   The amount of ticks to wait between executions.
      * @return The id of the task.
      */
-    default int syncRepeating(long delay,
+    default WrappedTask syncRepeating(long delay,
                               long repeat,
                               @NotNull Runnable runnable) {
         return syncRepeating(runnable, delay, repeat);

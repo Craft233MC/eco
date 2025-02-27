@@ -1,6 +1,8 @@
 package com.willfp.eco.core;
 
 import com.google.common.collect.ImmutableList;
+import com.tcoded.folialib.FoliaLib;
+import com.tcoded.folialib.impl.PlatformScheduler;
 import com.willfp.eco.core.command.impl.PluginCommand;
 import com.willfp.eco.core.config.base.ConfigYml;
 import com.willfp.eco.core.config.base.LangYml;
@@ -77,7 +79,7 @@ public abstract class EcoPlugin extends JavaPlugin implements PluginLike, Regist
     /**
      * The plugin scheduler.
      */
-    private final Scheduler scheduler;
+    private final PlatformScheduler scheduler;
 
     /**
      * The plugin Event Manager.
@@ -179,6 +181,8 @@ public abstract class EcoPlugin extends JavaPlugin implements PluginLike, Regist
      * The tasks to run on task creation.
      */
     private final ListMap<LifecyclePosition, Runnable> onCreateTasks = new ListMap<>();
+
+    private static FoliaLib foliaLib;
 
     /**
      * Create a new plugin.
@@ -338,7 +342,7 @@ public abstract class EcoPlugin extends JavaPlugin implements PluginLike, Regist
 
         this.getLogger().info("Initializing " + this.getColor() + this.getName());
 
-        this.scheduler = Eco.get().createScheduler(this);
+        this.scheduler = new FoliaLib(this).getScheduler();
         this.eventManager = Eco.get().createEventManager(this);
         this.namespacedKeyFactory = Eco.get().createNamespacedKeyFactory(this);
         this.metadataValueFactory = Eco.get().createMetadataValueFactory(this);
@@ -382,6 +386,7 @@ public abstract class EcoPlugin extends JavaPlugin implements PluginLike, Regist
     @Override
     public final void onEnable() {
         super.onEnable();
+        foliaLib = new FoliaLib(this);
 
         this.getLogger().info("Loading " + this.getColor() + this.getName());
 
@@ -452,7 +457,7 @@ public abstract class EcoPlugin extends JavaPlugin implements PluginLike, Regist
             this.logger = before;
         }, 1);
 
-        this.getScheduler().runLater(this::afterLoad, 2);
+        this.getScheduler().runLater(() -> this.afterLoad(), 2);
 
         if (this.isSupportingExtensions()) {
             this.getExtensionLoader().loadExtensions();
@@ -500,7 +505,7 @@ public abstract class EcoPlugin extends JavaPlugin implements PluginLike, Regist
         super.onDisable();
 
         this.getEventManager().unregisterAllListeners();
-        this.getScheduler().cancelAll();
+        this.getScheduler().cancelAllTasks();
 
         this.handleLifecycle(this.onDisable, this::handleDisable);
 
@@ -646,7 +651,7 @@ public abstract class EcoPlugin extends JavaPlugin implements PluginLike, Regist
         this.getConfigHandler().updateConfigs();
 
         if (cancelTasks) {
-            this.getScheduler().cancelAll();
+            this.getScheduler().cancelAllTasks();
         }
 
         this.getConfigHandler().callUpdate();
@@ -1103,7 +1108,7 @@ public abstract class EcoPlugin extends JavaPlugin implements PluginLike, Regist
      *
      * @return The scheduler.
      */
-    public Scheduler getScheduler() {
+    public PlatformScheduler getScheduler() {
         return this.scheduler;
     }
 
@@ -1269,5 +1274,9 @@ public abstract class EcoPlugin extends JavaPlugin implements PluginLike, Regist
     @Override
     public @NotNull File getFile() {
         return super.getFile();
+    }
+
+    public static FoliaLib getFoliaLib() {
+        return foliaLib;
     }
 }

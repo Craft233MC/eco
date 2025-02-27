@@ -132,6 +132,7 @@ allprojects {
         // Other
         implementation("com.github.ben-manes.caffeine:caffeine:3.1.5")
         implementation("org.apache.maven:maven-artifact:3.9.0")
+        implementation("com.github.technicallycoded:FoliaLib:0.4.3")
     }
 
     tasks.withType<JavaCompile> {
@@ -223,6 +224,7 @@ tasks {
         relocate("reactor.", "com.willfp.eco.libs.reactor.") // Dot in name to be safe
         relocate("com.moandjiezana.toml", "com.willfp.eco.libs.toml")
         relocate("com.willfp.modelenginebridge", "com.willfp.eco.libs.modelenginebridge")
+        relocate("com.tcoded.folialib", "com.willfp.eco.libs.folialib")
 
         /*
         Kotlin and caffeine are not shaded so that they can be accessed directly by eco plugins.

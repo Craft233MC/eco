@@ -33,7 +33,7 @@ public class UpdateChecker {
      * @param callback The process to run after checking.
      */
     public void getVersion(@NotNull final Consumer<? super String> callback) {
-        this.getPlugin().getScheduler().runAsync(() -> {
+        this.getPlugin().getScheduler().runAsync(wrappedTask -> {
             try {
                 InputStream inputStream = new URL(
                         "https://api.polymart.org/v1/getResourceInfoSimple?key=version&resource_id=" + this.getPlugin().getResourceId()

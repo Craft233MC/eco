@@ -1,5 +1,6 @@
 package com.willfp.eco.internal.spigot.metrics
 
+import com.tcoded.folialib.impl.PlatformScheduler
 import com.willfp.eco.core.Eco
 import com.willfp.eco.core.config.json
 import com.willfp.eco.core.data.ServerProfile
@@ -15,12 +16,10 @@ private const val PLAYERFLOW_URL = "https://playerflow.auxilor.io/api/v1/ping"
 private val client = HttpClient.newBuilder().build()
 
 class PlayerflowHandler(
-    private val scheduler: Scheduler
+    private val scheduler: PlatformScheduler
 ) {
     internal fun startTicking() {
-        scheduler.runAsyncTimer(1200L, 1200L) {
-            makeRequest()
-        }
+        scheduler.runTimerAsync(Runnable { makeRequest() },1200L, 1200L)
     }
 
     private fun makeRequest() {

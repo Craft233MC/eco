@@ -283,9 +283,10 @@ abstract class EcoSpigotPlugin : EcoPlugin() {
         }
 
         this.scheduler.runTimer(
+            Runnable { getProxy(PacketHandlerProxy::class.java).clearDisplayFrames() },
             this.configYml.getInt("display-frame-ttl").toLong(),
             this.configYml.getInt("display-frame-ttl").toLong(),
-        ) { getProxy(PacketHandlerProxy::class.java).clearDisplayFrames() }
+        )
 
         if (this.configYml.getBool("playerflow")) {
             PlayerflowHandler(this.scheduler).startTicking()

@@ -95,12 +95,12 @@ class ProfileHandler(
         ServerLocking.lock("Migrating player data! Check console for more information.")
 
         // Run after 5 ticks to allow plugins to load their data keys
-        plugin.scheduler.runLater(5) {
+        plugin.scheduler.runLater(Runnable{
             doMigrate(fromFactory)
 
             plugin.dataYml.set(LEGACY_MIGRATED_KEY, true)
             plugin.dataYml.save()
-        }
+        }, 5)
     }
 
     private fun doMigrate(fromFactory: PersistentDataHandlerFactory) {

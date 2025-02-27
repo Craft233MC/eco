@@ -28,7 +28,7 @@ class ProfileWriter(
     }
 
     fun startTickingSaves() {
-        plugin.scheduler.runTimer(20, saveInterval) {
+        plugin.scheduler.runTimer( Runnable{
             val iterator = valuesToWrite.iterator()
 
             while (iterator.hasNext()) {
@@ -41,15 +41,15 @@ class ProfileWriter(
                 @Suppress("UNCHECKED_CAST")
                 dataHandler.write(request.uuid, request.key as PersistentDataKey<Any>, value)
             }
-        }
+        },20, saveInterval)
     }
 
     fun startTickingAutosave() {
-        plugin.scheduler.runTimer(autosaveInterval, autosaveInterval) {
+        plugin.scheduler.runTimer(Runnable {
             if (handler.localHandler.shouldAutosave()) {
                 handler.localHandler.save()
             }
-        }
+        },autosaveInterval, autosaveInterval)
     }
 
     private data class WriteRequest<T>(val uuid: UUID, val key: PersistentDataKey<T>)

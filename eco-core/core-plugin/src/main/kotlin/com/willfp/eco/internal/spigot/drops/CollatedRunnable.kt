@@ -6,7 +6,7 @@ import com.willfp.eco.internal.drops.EcoFastCollatedDropQueue
 
 class CollatedRunnable(plugin: EcoPlugin) {
     init {
-        plugin.scheduler.runTimer({
+        plugin.scheduler.runTimer(Runnable{
             for ((key, value) in EcoFastCollatedDropQueue.COLLATED_MAP) {
                 val queue = EcoDropQueue(key)
                     .setLocation(value.location)
